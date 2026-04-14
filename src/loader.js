@@ -36,6 +36,39 @@ function fixNormalMap(texture) {
   return fixed;
 }
 
+// Извлечь R-канал (реальные данные) в G-канал (roughness) для корректного чтения Three.js
+function fixMetalMap(texture) {
+  const img = texture.image;
+  const canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i]; // Actual surface data in R channel (~60%)
+    data[i]   = 0;     // R - unused
+    data[i+1] = r;     // G - roughness channel (Three.js reads G for roughness)
+    data[i+2] = 0;     // B - metalness channel (zero = no metalness from map)
+    data[i+3] = 255;
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+  const fixed = new THREE.CanvasTexture(canvas);
+  fixed.flipY     = texture.flipY;
+  fixed.repeat    = texture.repeat.clone();
+  fixed.offset    = texture.offset.clone();
+  fixed.wrapS     = texture.wrapS;
+  fixed.wrapT     = texture.wrapT;
+  fixed.magFilter = texture.magFilter;
+  fixed.minFilter = THREE.LinearFilter;
+  fixed.generateMipmaps = false;
+  return fixed;
+}
+
 // Try to load a texture, return null if it fails
 function loadTextureIfExists(path) {
   return new Promise((resolve) => {
@@ -91,15 +124,17 @@ export function loadWeapon(scene, weaponPath, onProgress) {
                 // Apply skin textures
                 if (colorMap) material.map = colorMap;
                 if (metalMap) {
-                  material.metalnessMap = metalMap;
+                  const fixedMetal = fixMetalMap(metalMap);
+                  material.roughnessMap = fixedMetal;
+                  // No metalnessMap - avoid wrong B=255 channel reading
                 }
                 if (normalMap) material.normalMap = fixNormalMap(normalMap);
                 if (aoMap) {
                   material.aoMap = aoMap;
                   material.aoMapIntensity = 1.2;
                 }
-                material.metalness = 0.4;
-                material.roughness = 0.55;
+                material.metalness = 0.3;
+                material.roughness = 1.0;
                 material.needsUpdate = true;
 
                 child.material = material;

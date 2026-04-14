@@ -12,6 +12,7 @@ export function setupLighting(scene, renderer) {
         (texture) => {
           const envMap = pmremGenerator.fromEquirectangular(texture).texture;
           scene.environment = envMap;
+          scene.environmentIntensity = 0.6;
           texture.dispose();
           pmremGenerator.dispose();
 

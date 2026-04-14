@@ -1,0 +1,164 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #0a0a0f;
+  overflow: hidden;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+#app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.ui-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px 36px;
+}
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.weapon-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.weapon-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f0f0f0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+
+.skin-name {
+  font-size: 1.1rem;
+  color: #e8c66a;
+  font-weight: 500;
+}
+
+.skin-name em {
+  color: #8a8a8a;
+  font-style: normal;
+}
+
+.loading-bar-wrap {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  text-align: center;
+  transition: opacity 0.6s ease;
+}
+
+.loading-text {
+  display: block;
+  color: #888;
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+}
+
+.loading-bar {
+  height: 2px;
+  background: #e8c66a;
+  width: 0%;
+  transition: width 0.2s ease;
+  box-shadow: 0 0 8px #e8c66a;
+}
+
+.hint {
+  text-align: center;
+  color: #444;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  pointer-events: all;
+}
+
+.view-btn {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ccc;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.view-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.view-btn.active {
+  background: #e8c66a;
+  color: #1a1a1a;
+  border-color: #e8c66a;
+}
+
+.weapons-menu {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  pointer-events: all;
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+.weapon-btn {
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #aaa;
+  font-size: 0.75rem;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.weapon-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ddd;
+}
+
+.weapon-btn.active {
+  background: #e8c66a;
+  color: #1a1a1a;
+  border-color: #e8c66a;
+}

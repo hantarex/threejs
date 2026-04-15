@@ -24,10 +24,8 @@ function fixNormalMap(texture) {
 
   ctx.putImageData(imageData, 0, 0);
   const fixed = new THREE.CanvasTexture(canvas);
-  // Copy orientation settings from original
-  fixed.flipY    = texture.flipY;
-  fixed.repeat   = texture.repeat.clone();
-  fixed.offset   = texture.offset.clone();
+  // Use glTF UV convention (flipY=false, no transform)
+  fixed.flipY    = false;
   fixed.wrapS    = texture.wrapS;
   fixed.wrapT    = texture.wrapT;
   fixed.magFilter = texture.magFilter;
@@ -58,9 +56,8 @@ function fixMetalMap(texture) {
 
   ctx.putImageData(imageData, 0, 0);
   const fixed = new THREE.CanvasTexture(canvas);
-  fixed.flipY     = texture.flipY;
-  fixed.repeat    = texture.repeat.clone();
-  fixed.offset    = texture.offset.clone();
+  // Use glTF UV convention (flipY=false, no transform)
+  fixed.flipY     = false;
   fixed.wrapS     = texture.wrapS;
   fixed.wrapT     = texture.wrapT;
   fixed.magFilter = texture.magFilter;
@@ -100,11 +97,10 @@ export function loadWeapon(scene, weaponPath, onProgress) {
             // Configure textures
             if (colorMap) colorMap.colorSpace = THREE.SRGBColorSpace;
 
-            // Fix texture orientation for custom textures
+            // Configure textures with glTF UV convention
             [colorMap, metalMap, normalMap, aoMap].filter(t => t).forEach(texture => {
-              // Mirror Y axis only
-              texture.repeat.set(1, -1);
-              texture.offset.set(0, 1);
+              // Use glTF convention (flipY=false, no manual Y-mirror)
+              texture.flipY = false;
               texture.wrapS = THREE.RepeatWrapping;
               texture.wrapT = THREE.RepeatWrapping;
               texture.magFilter = THREE.LinearFilter;

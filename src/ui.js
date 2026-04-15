@@ -4,24 +4,16 @@ export function createUI(container) {
   const overlay = document.createElement('div');
   overlay.className = 'ui-overlay';
 
-  // Создаём кнопки оружия
-  const weaponButtons = Object.entries(WEAPONS).map(([key, weapon]) =>
-    `<button class="weapon-btn ${key === 'ak47' ? 'active' : ''}" data-weapon="${key}">${weapon.name}</button>`
-  ).join('');
-
   overlay.innerHTML = `
     <div class="top-section">
       <div class="weapon-info">
-        <span class="weapon-name" id="weapon-name">AK-47</span>
-        <span class="skin-name" id="skin-name">Fire Serpent <em>| Field-Tested</em></span>
+        <span class="weapon-name" id="weapon-name">MAC-10</span>
+        <span class="skin-name" id="skin-name">Heat</span>
       </div>
       <div class="controls">
         <button class="view-btn active" data-view="free">FREE VIEW</button>
         <button class="view-btn" data-view="inspect">INSPECT</button>
       </div>
-    </div>
-    <div class="weapons-menu">
-      ${weaponButtons}
     </div>
     <div class="loading-bar-wrap" id="loading-wrap">
       <div class="loading-bar" id="loading-bar"></div>
@@ -31,12 +23,13 @@ export function createUI(container) {
   `;
   container.appendChild(overlay);
 
+  let _onApply  = null;
+  let _onRemove = null;
+
   return {
     setProgress(ratio) {
       const bar = document.getElementById('loading-bar');
-      if (bar) {
-        bar.style.width = `${ratio * 100}%`;
-      }
+      if (bar) bar.style.width = `${ratio * 100}%`;
     },
     hideLoading() {
       const wrap = document.getElementById('loading-wrap');
@@ -59,24 +52,13 @@ export function createUI(container) {
       if (skinEl) skinEl.textContent = skin;
     },
     onViewChange(callback) {
-      const buttons = container.querySelectorAll('.view-btn');
-      buttons.forEach(btn => {
+      overlay.querySelectorAll('.view-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          buttons.forEach(b => b.classList.remove('active'));
+          overlay.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           callback(btn.dataset.view);
         });
       });
     },
-    onWeaponChange(callback) {
-      const buttons = container.querySelectorAll('.weapon-btn');
-      buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          buttons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          callback(btn.dataset.weapon);
-        });
-      });
-    }
   };
 }
